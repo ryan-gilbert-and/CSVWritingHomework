@@ -10,21 +10,34 @@ import static java.util.Comparator.comparing;
 
 public class CSVWriter {
 
-    public static void writeFileFunction(String input, String output) {
+    public static List<Person> readCsv(String input) {
         List<Person> people = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File(input));
             scanner.useDelimiter("\\n");
             while (scanner.hasNext()) {
-                String scannerLine[] = scanner.next().split(",");
+                String[] scannerLine = scanner.next().split(",");
+
+                // first value of scanner line is always name, second is always age
                 Person person = new Person(scannerLine[0], Integer.parseInt(scannerLine[1].trim()));
                 people.add(person);
             }
             scanner.close();
 
-            System.out.println("Original Unsorted Data: " + people);
-            Collections.sort(people, comparing(Person::getName).thenComparing(Person::getAge));
-            System.out.println("Post-sort Data: " + people);
+            sortPeople(people);
+
+            return people;
+
+        } catch (FileNotFoundException error) {
+            System.out.println("Couldn't find the file '" + input + "' check spelling and try again?");
+        }
+
+        return new ArrayList<>();
+    }
+
+    public static void writeFileToCsv(List<Person> people, String output) {
+
+        if (people.size() > 0) {
 
             try {
                 FileWriter outputWriter = new FileWriter(output);
@@ -40,9 +53,21 @@ public class CSVWriter {
             } catch (IOException error) {
                 System.out.println("There was an error while writing to file! " + error);
             }
-
-        } catch (FileNotFoundException error) {
-            System.out.println("Couldn't find the file '" + input + "' check spelling and try again?");
+        } else {
+            System.out.println("There is no content to write!");
         }
+
+    }
+
+    private static void sortPeople(List<Person> people) {
+        System.out.println("Original Unsorted Data: " + people);
+        people.sort(comparing(Person::getName).thenComparing(Person::getAge));
+        System.out.println("Post-sort Data: " + people);
     }
 }
+
+
+
+
+
+
