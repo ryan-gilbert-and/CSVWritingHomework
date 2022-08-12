@@ -19,8 +19,10 @@ public class CSVWriter {
                 String[] scannerLine = scanner.next().split(",");
 
                 // first value of scanner line is always name, second is always age
-                Person person = new Person(scannerLine[0], Integer.parseInt(scannerLine[1].trim()));
-                people.add(person);
+                if (scannerLine.length == 2) {
+                    Person person = new Person(scannerLine[0], Integer.parseInt(scannerLine[1].trim()));
+                    people.add(person);
+                }
             }
             scanner.close();
 
